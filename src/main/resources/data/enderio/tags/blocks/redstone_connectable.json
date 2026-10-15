@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "realistic_lighting:industrial_fixture",
+    "realistic_lighting:square_ceiling_fixture",
+    "realistic_lighting:wall_sconce"
+  ]
+}

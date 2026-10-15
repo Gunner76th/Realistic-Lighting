@@ -1,0 +1,50 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+group = 'com.example.realisticlighting'
+version = '1.1.1'
+base { archivesName = 'realistic_lighting' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'info'
+            mods { realistic_lighting { source sourceSets.main } }
+        }
+        client {}
+        server { args '--nogui' }
+    }
+}
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
+    // Compile against a locally supplied Immersive Engineering JAR; never redistribute it.
+    // Set -PieJar=/path/to/ImmersiveEngineering-1.20.1-10.2.0-183.jar,
+    // or place that JAR in libs/ before building.
+    def ieJar = providers.gradleProperty('ieJar').orElse('libs/ImmersiveEngineering-1.20.1-10.2.0-183.jar').get()
+    compileOnly files(ieJar)
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+        mod_id: 'realistic_lighting',
+        mod_name: 'Realistic Lighting',
+        mod_license: 'MIT',
+        mod_version: project.version,
+        mod_authors: 'Gunner76th',
+        mod_description: 'Powered lighting fixtures with replaceable, finite-life bulbs, adaptive crafting recipes, and Immersive Engineering / Ender IO integration.',
+        loader_version_range: '[47,)',
+        minecraft_version_range: '[1.20.1,1.21)',
+        forge_version_range: '[47.2.0,)',
+        mod_id_placeholder: 'realistic_lighting'
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties
+    }
+}

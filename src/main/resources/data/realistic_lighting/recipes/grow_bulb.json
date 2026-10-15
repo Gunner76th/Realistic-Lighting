@@ -1,0 +1,169 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "immersiveengineering"
+        },
+        {
+          "type": "forge:mod_loaded",
+          "modid": "enderio"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " G ",
+          "CRC",
+          " I "
+        ],
+        "key": {
+          "G": {
+            "item": "minecraft:glass_pane"
+          },
+          "C": {
+            "item": "immersiveengineering:wirecoil_copper"
+          },
+          "R": {
+            "item": "enderio:double_layer_capacitor"
+          },
+          "I": {
+            "item": "minecraft:iron_nugget"
+          }
+        },
+        "result": {
+          "item": "realistic_lighting:grow_bulb",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "immersiveengineering"
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:mod_loaded",
+            "modid": "enderio"
+          }
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " G ",
+          "CRC",
+          " I "
+        ],
+        "key": {
+          "G": {
+            "item": "minecraft:glass_pane"
+          },
+          "C": {
+            "item": "immersiveengineering:wirecoil_copper"
+          },
+          "R": {
+            "item": "immersiveengineering:component_electronic_adv"
+          },
+          "I": {
+            "item": "minecraft:iron_nugget"
+          }
+        },
+        "result": {
+          "item": "realistic_lighting:grow_bulb",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:mod_loaded",
+            "modid": "immersiveengineering"
+          }
+        },
+        {
+          "type": "forge:mod_loaded",
+          "modid": "enderio"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " G ",
+          "CRC",
+          " I "
+        ],
+        "key": {
+          "G": {
+            "item": "minecraft:glass_pane"
+          },
+          "C": {
+            "item": "enderio:conductive_alloy_ingot"
+          },
+          "R": {
+            "item": "enderio:double_layer_capacitor"
+          },
+          "I": {
+            "item": "minecraft:iron_nugget"
+          }
+        },
+        "result": {
+          "item": "realistic_lighting:grow_bulb",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:mod_loaded",
+            "modid": "immersiveengineering"
+          }
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:mod_loaded",
+            "modid": "enderio"
+          }
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " G ",
+          "CRC",
+          " I "
+        ],
+        "key": {
+          "G": {
+            "item": "minecraft:emerald"
+          },
+          "C": {
+            "item": "minecraft:copper_ingot"
+          },
+          "R": {
+            "item": "minecraft:redstone"
+          },
+          "I": {
+            "item": "minecraft:iron_nugget"
+          }
+        },
+        "result": {
+          "item": "realistic_lighting:grow_bulb",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

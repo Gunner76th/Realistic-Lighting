@@ -1,0 +1,1 @@
+{"variants":{"lit=false":{"model":"realistic_lighting:block/lamp_base"},"lit=true":{"model":"realistic_lighting:block/lamp_base_lit"}}}
