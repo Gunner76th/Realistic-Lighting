@@ -10,7 +10,7 @@ import com.example.realisticlighting.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraft.nbt.ListTag;
+
 import net.minecraft.nbt.Tag;
 import com.example.realisticlighting.logic.LedExtendedLighting;
 import net.minecraft.network.chat.Component;
@@ -19,21 +19,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import com.example.realisticlighting.menu.LampMenu;
-import net.minecraft.core.Direction;
+
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
+
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+
 
 public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
     // 0 = On, 1 = Off, 2 = Redstone
@@ -45,7 +42,10 @@ public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
     }
     public boolean isRedstonePowered() { return level != null && level.hasNeighborSignal(worldPosition); }
     private boolean enabled() { return operatingMode == 0 || (operatingMode == 2 && isRedstonePowered()); }
-    public int getEnergyStored() { return energy.getEnergyStored(); }
+    public IEnergyStorage getEnergyStorage() {
+    return energy;
+}
+	public int getEnergyStored() { return energy.getEnergyStored(); }
     public int getEnergyCapacity() { return energy.getMaxEnergyStored(); }
     public long getAgeTicks() { return ageTicks; }
     public int getEnergyCost() { return bulb.isEmpty() ? 0 : energyPerTick(); }
@@ -66,7 +66,6 @@ public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
         }
         void restore(int amount) { energy = Math.max(0, Math.min(capacity, amount)); }
     }
-    private LazyOptional<IEnergyStorage> energyCapability;
     private boolean lastLit;
     private final Set<BlockPos> ledNodes = new HashSet<>();
 
@@ -108,7 +107,6 @@ public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
             : state.getBlock() instanceof WallSconceBlock ? EnergyConfig.sconce()
             : EnergyConfig.cage();
         energy = new InternalEnergyStorage(capacity);
-        energyCapability = LazyOptional.of(() -> energy);
     }
     public ItemStack getBulb() { return bulb; }
     public void setBulb(ItemStack stack) { bulb = stack.copy(); ageTicks = 0; updateLitState(); setChanged(); sync(); }
@@ -156,21 +154,68 @@ public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
         updateLedNodes(shouldLight && bulb.is(ModItems.LED_BULB.get()));
     }
     private void sync() { if (level != null && !level.isClientSide) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
-    @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); tag.put("Bulb", bulb.save(new CompoundTag())); tag.putLong("AgeTicks", ageTicks); tag.putInt("Energy", energy.getEnergyStored()); tag.putInt("OperatingMode", operatingMode);
-        long[] nodes = ledNodes.stream().mapToLong(BlockPos::asLong).toArray();
-        tag.putLongArray("LedNodes", nodes);
+    
+@Override
+protected void saveAdditional(
+        CompoundTag tag,
+        HolderLookup.Provider registries
+) {
+    super.saveAdditional(tag, registries);
+
+    if (!bulb.isEmpty()) {
+        tag.put("Bulb", bulb.save(registries));
     }
-    @Override public void load(CompoundTag tag) { super.load(tag); bulb = ItemStack.of(tag.getCompound("Bulb")); ageTicks = tag.getLong("AgeTicks"); energy.restore(tag.getInt("Energy")); operatingMode = Math.max(0, Math.min(2, tag.getInt("OperatingMode"))); lastLit = false;
-        ledNodes.clear();
-        for (long packed : tag.getLongArray("LedNodes")) ledNodes.add(BlockPos.of(packed));
+
+    tag.putLong("AgeTicks", ageTicks);
+    tag.putInt("Energy", energy.getEnergyStored());
+    tag.putInt("OperatingMode", operatingMode);
+
+    long[] nodes = ledNodes.stream()
+            .mapToLong(BlockPos::asLong)
+            .toArray();
+
+    tag.putLongArray("LedNodes", nodes);
+}
+
+@Override
+protected void loadAdditional(
+        CompoundTag tag,
+        HolderLookup.Provider registries
+) {
+    super.loadAdditional(tag, registries);
+
+    bulb = tag.contains("Bulb", Tag.TAG_COMPOUND)
+            ? ItemStack.parseOptional(
+                    registries,
+                    tag.getCompound("Bulb")
+              )
+            : ItemStack.EMPTY;
+
+    ageTicks = tag.getLong("AgeTicks");
+    energy.restore(tag.getInt("Energy"));
+
+    operatingMode = Math.max(
+            0,
+            Math.min(2, tag.getInt("OperatingMode"))
+    );
+
+    lastLit = false;
+
+    ledNodes.clear();
+
+    for (long packed : tag.getLongArray("LedNodes")) {
+        ledNodes.add(BlockPos.of(packed));
     }
-    @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); saveAdditional(tag); return tag; }
-    @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-    @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) { load(packet.getTag()); }
-    @Override public void invalidateCaps() { super.invalidateCaps(); energyCapability.invalidate(); }
-    @Override public void reviveCaps() { super.reviveCaps(); energyCapability = LazyOptional.of(() -> energy); }
-    @Override public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
-        if (capability == ForgeCapabilities.ENERGY) return energyCapability.cast();
-        return super.getCapability(capability, side);
-    }
+}
+
+@Override
+public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    return saveWithoutMetadata(registries);
+}
+
+@Override
+public ClientboundBlockEntityDataPacket getUpdatePacket() {
+    return ClientboundBlockEntityDataPacket.create(this);
+}
+
 }

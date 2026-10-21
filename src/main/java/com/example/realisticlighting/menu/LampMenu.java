@@ -4,7 +4,7 @@ import com.example.realisticlighting.blockentity.LampBaseBlockEntity;
 import com.example.realisticlighting.registry.ModItems;
 import com.example.realisticlighting.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,9 +22,21 @@ public class LampMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private boolean updatingSlot;
 
-    public LampMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
-        this(id, inventory, inventory.player.level().getBlockEntity(buffer.readBlockPos()) instanceof LampBaseBlockEntity be ? be : null);
-    }
+   
+public LampMenu(
+        int id,
+        Inventory inventory,
+        RegistryFriendlyByteBuf buffer
+) {
+    this(
+            id,
+            inventory,
+            inventory.player.level().getBlockEntity(
+                    buffer.readBlockPos()
+            ) instanceof LampBaseBlockEntity be ? be : null
+    );
+}
+
 
     public LampMenu(int id, Inventory inventory, LampBaseBlockEntity lamp) {
         super(ModMenus.LAMP.get(), id);

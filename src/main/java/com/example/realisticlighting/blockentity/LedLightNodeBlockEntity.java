@@ -1,5 +1,5 @@
 package com.example.realisticlighting.blockentity;
-
+import net.minecraft.core.HolderLookup;
 import com.example.realisticlighting.block.LedLightNodeBlock;
 import com.example.realisticlighting.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -48,24 +48,50 @@ public class LedLightNodeBlockEntity extends BlockEntity {
             setChanged();
         }
     }
-    @Override protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+
+    @Override
+    protected void saveAdditional(
+            CompoundTag tag,
+            HolderLookup.Provider registries
+    ) {
+        super.saveAdditional(tag, registries);
+
         ListTag list = new ListTag();
+
         owners.forEach((pos, light) -> {
             CompoundTag entry = new CompoundTag();
             entry.putLong("Fixture", pos);
             entry.putInt("Light", light);
             list.add(entry);
         });
+
         tag.put("Owners", list);
     }
-    @Override public void load(CompoundTag tag) {
-        super.load(tag);
+
+    @Override
+    protected void loadAdditional(
+            CompoundTag tag,
+            HolderLookup.Provider registries
+    ) {
+        super.loadAdditional(tag, registries);
+
         owners.clear();
-        ListTag list = tag.getList("Owners", Tag.TAG_COMPOUND);
+
+        ListTag list = tag.getList(
+                "Owners",
+                Tag.TAG_COMPOUND
+        );
+
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entry = list.getCompound(i);
-            owners.put(entry.getLong("Fixture"), Math.max(1, Math.min(15, entry.getInt("Light"))));
+
+            owners.put(
+                    entry.getLong("Fixture"),
+                    Math.max(
+                            1,
+                            Math.min(15, entry.getInt("Light"))
+                    )
+            );
         }
     }
 }

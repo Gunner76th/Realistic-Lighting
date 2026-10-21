@@ -86,12 +86,39 @@ public final class LedExtendedLighting {
         return null;
     }
 
-    private static boolean clearRay(Level level, BlockPos fixture, BlockPos target, Direction facing) {
-        Vec3 from = Vec3.atCenterOf(fixture).add(facing.getStepX() * .65, facing.getStepY() * .65, facing.getStepZ() * .65);
-        Vec3 to = Vec3.atCenterOf(target);
-        BlockHitResult hit = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
-        return hit.getType() == HitResult.Type.MISS || hit.getBlockPos().equals(target);
-    }
+
+
+private static boolean clearRay(
+        Level level,
+        BlockPos fixture,
+        BlockPos target,
+        Direction facing
+) {
+    Vec3 from = Vec3.atCenterOf(fixture).add(
+            facing.getStepX() * 0.65,
+            facing.getStepY() * 0.65,
+            facing.getStepZ() * 0.65
+    );
+
+    Vec3 to = Vec3.atCenterOf(target);
+
+    // Use the block-only ray tracer. Unlike ClipContext with a
+    // null entity, this does not construct an EntityCollisionContext.
+    BlockHitResult hit = level.clip(
+            new ClipContext(
+                    from,
+                    to,
+                    ClipContext.Block.COLLIDER,
+                    ClipContext.Fluid.NONE,
+                    net.minecraft.world.phys.shapes.CollisionContext.empty()
+            )
+    );
+
+    return hit.getType() == HitResult.Type.MISS
+            || hit.getBlockPos().equals(target);
+}
+
+
 
     public static int strength(BlockPos fixture, BlockPos node, BlockState state) {
         Direction facing = state.getValue(IndustrialFixtureBlock.FACING);

@@ -66,7 +66,7 @@ public class LampScreen extends AbstractContainerScreen<LampMenu> {
         graphics.drawString(font, Component.translatable("container.inventory"), 8, inventoryLabelY, 0xFFFFFF, false);
     }
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
+		renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         // Highlight the selected operating mode using the synchronized menu data.
         // Draw after the vanilla buttons so the dark selection remains visible

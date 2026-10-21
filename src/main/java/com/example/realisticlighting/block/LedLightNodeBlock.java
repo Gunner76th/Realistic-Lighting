@@ -1,5 +1,5 @@
 package com.example.realisticlighting.block;
-
+import com.mojang.serialization.MapCodec;
 import com.example.realisticlighting.blockentity.LedLightNodeBlockEntity;
 import com.example.realisticlighting.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,14 @@ import org.jetbrains.annotations.Nullable;
 
 /** Invisible, non-colliding, replaceable light node. Never distributed as an item. */
 public class LedLightNodeBlock extends BaseEntityBlock {
-    public static final IntegerProperty LIGHT = IntegerProperty.create("light", 1, 15);
+public static final MapCodec<LedLightNodeBlock> CODEC =
+        simpleCodec(LedLightNodeBlock::new);
+
+@Override
+protected MapCodec<? extends BaseEntityBlock> codec() {
+    return CODEC;
+}   
+   public static final IntegerProperty LIGHT = IntegerProperty.create("light", 1, 15);
     public LedLightNodeBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(LIGHT, 1));
