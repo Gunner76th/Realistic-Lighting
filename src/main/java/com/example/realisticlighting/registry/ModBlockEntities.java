@@ -5,6 +5,7 @@ import com.example.realisticlighting.RealisticLighting;
 import com.example.realisticlighting.blockentity.LampBaseBlockEntity;
 import com.example.realisticlighting.blockentity.LedLightNodeBlockEntity;
 
+import net.neoforged.fml.ModList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,15 +46,20 @@ public final class ModBlockEntities {
             ).build(null)
     );
 
-    public static LampBaseBlockEntity createFixture(
-            BlockPos pos,
-            BlockState state
-    ) {
-        // Core migration stage:
-        // IE-specific fixture construction will be restored
-        // when the NeoForge IE integration is ported.
-        return new LampBaseBlockEntity(pos, state);
+ 
+
+public static LampBaseBlockEntity createFixture(
+        BlockPos pos,
+        BlockState state
+) {
+    if (ModList.get().isLoaded("immersiveengineering")) {
+        return com.example.realisticlighting.compat.IEFixtureFactory.create(pos, state);
     }
+
+    return new LampBaseBlockEntity(pos, state);
+}
+
+
 
     private ModBlockEntities() {
     }

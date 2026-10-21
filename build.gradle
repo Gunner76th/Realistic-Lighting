@@ -40,13 +40,7 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-// Temporary NeoForge 1.21.1 alpha migration:
-// Preserve IE source files, but exclude them until
-// the NeoForge Immersive Engineering API is integrated.
-sourceSets.main.java {
-    exclude '**/IELVFixtureBlockEntity.java'
-    exclude '**/IEWireHooks.java'
-}
+
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
@@ -137,7 +131,14 @@ configurations {
 }
 
 dependencies {
-    // Example optional mod dependency with JEI
+    
+	// Optional Immersive Engineering integration.
+    // Available for compilation, but not bundled into our mod.
+    compileOnly files("libs/ImmersiveEngineering-1.21.1-12.4.2-194.jar")
+
+    // Existing dependency examples remain below.
+	
+	// Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     // compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"

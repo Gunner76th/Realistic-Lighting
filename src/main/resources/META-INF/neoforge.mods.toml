@@ -23,3 +23,11 @@ type="required"
 versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"
+
+
+[[dependencies.${mod_id}]]
+modId="immersiveengineering"
+type="optional"
+versionRange="[12.4.2,)"
+ordering="AFTER"
+side="BOTH"

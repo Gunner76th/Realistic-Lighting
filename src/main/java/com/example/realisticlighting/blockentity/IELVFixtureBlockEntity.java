@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.wires.*;
 import blusunrize.immersiveengineering.api.wires.localhandlers.EnergyTransferHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Direction;
 import com.example.realisticlighting.block.IndustrialFixtureBlock;
 import com.example.realisticlighting.block.SquareCeilingFixtureBlock;
@@ -104,14 +105,22 @@ public class IELVFixtureBlockEntity extends LampBaseBlockEntity implements Energ
     @Override public int getRequestedEnergy() { return Math.max(0, getEnergyCapacity() - getEnergyStored()); }
     @Override public void insertEnergy(int amount) { receiveWireEnergy(amount); }
 
-    @Override protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("LVWireCount", wireCount);
-    }
-    @Override public void load(CompoundTag tag) {
-        super.load(tag);
-        wireCount = Math.max(0, Math.min(maxWireConnections(), tag.getInt("LVWireCount")));
-    }
+  
+@Override
+protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    super.saveAdditional(tag, registries);
+    tag.putInt("LVWireCount", wireCount);
+}
+
+@Override
+protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    super.loadAdditional(tag, registries);
+    wireCount = Math.max(
+            0,
+            Math.min(maxWireConnections(), tag.getInt("LVWireCount"))
+    );
+}
+
     @Override public void onLoad() {
         super.onLoad();
         if (level != null && !level.isClientSide) GlobalWireNetwork.getNetwork(level).onConnectorLoad(this, level);
@@ -124,7 +133,33 @@ public class IELVFixtureBlockEntity extends LampBaseBlockEntity implements Energ
         if (level != null && !level.isClientSide) GlobalWireNetwork.getNetwork(level).onConnectorUnload(this);
         super.setRemoved();
     }
-    public void disconnectWires() {
-        if (level != null && !level.isClientSide) GlobalWireNetwork.getNetwork(level).removeAllConnectionsAt(this, c -> {});
+    
+public void disconnectWires() {
+    if (level == null || level.isClientSide) {
+        return;
     }
+
+    GlobalWireNetwork network = GlobalWireNetwork.getNetwork(level);
+
+    network.removeAllConnectionsAt(this, connection -> {
+        if (!level.getGameRules().getBoolean(
+                net.minecraft.world.level.GameRules.RULE_DOBLOCKDROPS)) {
+            return;
+        }
+
+        net.minecraft.world.item.ItemStack wire =
+                connection.type.getWireCoil(connection);
+
+        if (!wire.isEmpty()) {
+            net.minecraft.world.level.block.Block.popResource(
+                    level,
+                    worldPosition,
+                    wire
+            );
+        }
+    });
+
+    wireCount = 0;
+    setChanged();
+}
 }

@@ -184,30 +184,37 @@ public class LampBaseBlock extends BaseEntityBlock {
         }
     }
 
-    @Override
-    protected void onRemove(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            BlockState newState,
-            boolean moving
-    ) {
-        if (!state.is(newState.getBlock()) && !level.isClientSide) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
+  
+@Override
+protected void onRemove(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        BlockState newState,
+        boolean moving
+) {
+    if (!state.is(newState.getBlock()) && !level.isClientSide) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            if (blockEntity instanceof LampBaseBlockEntity lamp) {
-                // Immersive Engineering wire cleanup will be
-                // restored with the IE integration migration.
-                lamp.clearLedNodes();
+        if (blockEntity instanceof LampBaseBlockEntity lamp) {
+            // Disconnect IE wires before removing the fixture.
+            if (net.neoforged.fml.ModList.get()
+                    .isLoaded("immersiveengineering")) {
+                com.example.realisticlighting.compat.IEWireHooks.disconnect(lamp);
+            }
 
-                ItemStack bulb = lamp.removeBulb();
+            // Remove extended lighting nodes.
+            lamp.clearLedNodes();
 
-                if (!bulb.isEmpty()) {
-                    Block.popResource(level, pos, bulb);
-                }
+            // Return the installed bulb to the world.
+            ItemStack bulb = lamp.removeBulb();
+
+            if (!bulb.isEmpty()) {
+                Block.popResource(level, pos, bulb);
             }
         }
-
-        super.onRemove(state, level, pos, newState, moving);
     }
+
+    super.onRemove(state, level, pos, newState, moving);
+}
 }
