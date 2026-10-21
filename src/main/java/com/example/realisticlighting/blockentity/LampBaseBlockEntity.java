@@ -31,6 +31,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.util.Mth;
 
 public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
     // 0 = On, 1 = Off, 2 = Redstone
@@ -109,8 +112,59 @@ public class LampBaseBlockEntity extends BlockEntity implements MenuProvider {
         energy = new InternalEnergyStorage(capacity);
     }
     public ItemStack getBulb() { return bulb; }
-    public void setBulb(ItemStack stack) { bulb = stack.copy(); ageTicks = 0; updateLitState(); setChanged(); sync(); }
-    public ItemStack removeBulb() { ItemStack result = bulb.copy(); bulb = ItemStack.EMPTY; ageTicks = 0; updateLitState(); setChanged(); sync(); return result; }
+  
+private static final String BULB_AGE_KEY = "RealisticLightingAgeTicks";
+
+public void setBulb(ItemStack stack) {
+    bulb = stack.copyWithCount(1);
+
+    if (bulb.isEmpty()) {
+        ageTicks = 0;
+    } else {
+        CustomData data = bulb.getOrDefault(
+                DataComponents.CUSTOM_DATA,
+                CustomData.EMPTY
+        );
+
+        ageTicks = Mth.clamp(
+                data.copyTag().getLong(BULB_AGE_KEY),
+                0L,
+                lifespan()
+        );
+    }
+
+    updateLitState();
+    setChanged();
+    sync();
+}
+
+public ItemStack removeBulb() {
+    ItemStack result = bulb.copy();
+
+    if (!result.isEmpty()) {
+        CompoundTag data = result.getOrDefault(
+                DataComponents.CUSTOM_DATA,
+                CustomData.EMPTY
+        ).copyTag();
+
+        data.putLong(BULB_AGE_KEY, ageTicks);
+
+        result.set(
+                DataComponents.CUSTOM_DATA,
+                CustomData.of(data)
+        );
+    }
+
+    bulb = ItemStack.EMPTY;
+    ageTicks = 0;
+
+    updateLitState();
+    setChanged();
+    sync();
+
+    return result;
+}
+
 
     private long lifespan() {
         if (bulb.is(ModItems.INCANDESCENT_BULB.get())) return 30L * 24_000L;

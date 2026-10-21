@@ -80,10 +80,45 @@ public LampMenu(
         // Reading directly from the client block entity (with a no-op set method)
         // leaves the GUI frozen until a block update or menu reopening.
         addDataSlots(data);
-        addSlot(new Slot(bulbInventory, 0, 149, 31) {
-            @Override public boolean mayPlace(ItemStack stack) { return isBulb(stack); }
-            @Override public int getMaxStackSize() { return 1; }
-        });
+
+addSlot(new Slot(bulbInventory, 0, 149, 31) {
+    @Override
+    public boolean mayPlace(ItemStack stack) {
+        return isBulb(stack);
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
+    public ItemStack remove(int amount) {
+        if (amount <= 0 || getItem().isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        if (!inventory.player.level().isClientSide && lamp != null) {
+            // Capture the bulb's accumulated usage before it leaves
+            // the GUI slot.
+            ItemStack removed = lamp.removeBulb();
+
+            // Keep the GUI inventory synchronized without triggering
+            // another block-entity update.
+            updatingSlot = true;
+            try {
+                bulbInventory.setItem(0, ItemStack.EMPTY);
+            } finally {
+                updatingSlot = false;
+            }
+
+            return removed;
+        }
+
+        return super.remove(amount);
+    }
+});
+
         for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++)
             addSlot(new Slot(inventory, col + row * 9 + 9, 8 + col * 18, 116 + row * 18));
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 174));
@@ -115,9 +150,39 @@ public LampMenu(
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack stack = slot.getItem();
         ItemStack original = stack.copy();
-        if (index == 0) {
-            if (!moveItemStackTo(stack, 1, 37, true)) return ItemStack.EMPTY;
-        } else if (isBulb(stack) && !slots.get(0).hasItem()) {
+        
+if (index == 0) {
+    if (lamp == null || player.level().isClientSide) {
+        return ItemStack.EMPTY;
+    }
+
+    // Save the bulb's current lifespan before transferring it.
+    ItemStack preservedBulb = lamp.getBulb().copy();
+
+    if (preservedBulb.isEmpty()) {
+        return ItemStack.EMPTY;
+    }
+
+    // Preserve the bulb's usage through the block entity.
+    preservedBulb = lamp.removeBulb();
+
+    // Move the lifespan-preserving item into the player's inventory.
+    if (!moveItemStackTo(preservedBulb, 1, 37, true)) {
+        // Inventory full: restore the bulb to the fixture.
+        lamp.setBulb(preservedBulb);
+        return ItemStack.EMPTY;
+    }
+
+    updatingSlot = true;
+    try {
+        bulbInventory.setItem(0, ItemStack.EMPTY);
+    } finally {
+        updatingSlot = false;
+    }
+
+    return ItemStack.EMPTY;
+}
+ else if (isBulb(stack) && !slots.get(0).hasItem()) {
             if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
         } else if (index >= 1 && index < 28) {
             if (!moveItemStackTo(stack, 28, 37, false)) return ItemStack.EMPTY;
