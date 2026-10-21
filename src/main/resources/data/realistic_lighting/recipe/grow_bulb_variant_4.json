@@ -1,0 +1,42 @@
+﻿{
+    "type":  "minecraft:crafting_shaped",
+    "pattern":  [
+                    " G ",
+                    "CRC",
+                    " I "
+                ],
+    "key":  {
+                "G":  {
+                          "item":  "minecraft:emerald"
+                      },
+                "C":  {
+                          "item":  "minecraft:copper_ingot"
+                      },
+                "R":  {
+                          "item":  "minecraft:redstone"
+                      },
+                "I":  {
+                          "item":  "minecraft:iron_nugget"
+                      }
+            },
+    "result":  {
+                   "count":  1,
+                   "id":  "realistic_lighting:grow_bulb"
+               },
+    "neoforge:conditions":  [
+                                {
+                                    "type":  "neoforge:not",
+                                    "value":  {
+                                                  "type":  "neoforge:mod_loaded",
+                                                  "modid":  "immersiveengineering"
+                                              }
+                                },
+                                {
+                                    "type":  "neoforge:not",
+                                    "value":  {
+                                                  "type":  "neoforge:mod_loaded",
+                                                  "modid":  "enderio"
+                                              }
+                                }
+                            ]
+}

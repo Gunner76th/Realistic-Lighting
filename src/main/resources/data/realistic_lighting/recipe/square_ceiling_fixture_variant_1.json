@@ -1,0 +1,36 @@
+﻿{
+    "type":  "minecraft:crafting_shaped",
+    "pattern":  [
+                    "III",
+                    "RCR",
+                    "IGI"
+                ],
+    "key":  {
+                "I":  {
+                          "item":  "minecraft:iron_ingot"
+                      },
+                "R":  {
+                          "item":  "immersiveengineering:wirecoil_copper"
+                      },
+                "C":  {
+                          "item":  "enderio:basic_capacitor"
+                      },
+                "G":  {
+                          "item":  "minecraft:glass_pane"
+                      }
+            },
+    "result":  {
+                   "count":  1,
+                   "id":  "realistic_lighting:square_ceiling_fixture"
+               },
+    "neoforge:conditions":  [
+                                {
+                                    "type":  "neoforge:mod_loaded",
+                                    "modid":  "immersiveengineering"
+                                },
+                                {
+                                    "type":  "neoforge:mod_loaded",
+                                    "modid":  "enderio"
+                                }
+                            ]
+}
