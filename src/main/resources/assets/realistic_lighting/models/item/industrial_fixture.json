@@ -1,1 +1,101 @@
-{"parent": "realistic_lighting:block/industrial_fixture_gray_0_off"}
+{
+    "parent":  "realistic_lighting:block/industrial_fixture_gray_0_off",
+    "overrides":  [
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  0
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_white_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  1
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_orange_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  2
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_magenta_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  3
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_light_blue_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  4
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_yellow_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  5
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_lime_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  6
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_pink_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  7
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_gray_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  8
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_light_gray_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  9
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_cyan_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  10
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_purple_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  11
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_blue_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  12
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_brown_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  13
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_green_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  14
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_red_0_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  15
+                                        },
+                          "model":  "realistic_lighting:block/industrial_fixture_black_0_off"
+                      }
+                  ]
+}

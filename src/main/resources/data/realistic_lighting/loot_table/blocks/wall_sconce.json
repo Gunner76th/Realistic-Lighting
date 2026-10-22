@@ -1,0 +1,28 @@
+{
+    "type":  "minecraft:block",
+    "pools":  [
+                  {
+                      "rolls":  1,
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "realistic_lighting:wall_sconce",
+                                          "functions":  [
+                                                            {
+                                                                "function":  "minecraft:copy_state",
+                                                                "properties":  [
+                                                                                   "color"
+                                                                               ],
+                                                                "block":  "realistic_lighting:wall_sconce"
+                                                            }
+                                                        ]
+                                      }
+                                  ],
+                      "conditions":  [
+                                         {
+                                             "condition":  "minecraft:survives_explosion"
+                                         }
+                                     ]
+                  }
+              ]
+}

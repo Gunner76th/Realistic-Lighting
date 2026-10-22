@@ -1,51 +1,149 @@
 {
-  "parent": "realistic_lighting:block/wall_sconce_gray_1_off",
-  "display": {
-    "gui": {
-      "rotation": [
-        25,
-        25,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.9,
-        0.9,
-        0.9
-      ]
-    },
-    "thirdperson_righthand": {
-      "rotation": [
-        75,
-        45,
-        0
-      ],
-      "translation": [
-        0,
-        2,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
-    },
-    "firstperson_righthand": {
-      "rotation": [
-        0,
-        45,
-        0
-      ],
-      "scale": [
-        0.6,
-        0.6,
-        0.6
-      ]
-    }
-  }
+    "parent":  "realistic_lighting:block/wall_sconce_gray_1_off",
+    "display":  {
+                    "gui":  {
+                                "rotation":  [
+                                                 25,
+                                                 25,
+                                                 0
+                                             ],
+                                "translation":  [
+                                                    0,
+                                                    0,
+                                                    0
+                                                ],
+                                "scale":  [
+                                              0.9,
+                                              0.9,
+                                              0.9
+                                          ]
+                            },
+                    "thirdperson_righthand":  {
+                                                  "rotation":  [
+                                                                   75,
+                                                                   45,
+                                                                   0
+                                                               ],
+                                                  "translation":  [
+                                                                      0,
+                                                                      2,
+                                                                      0
+                                                                  ],
+                                                  "scale":  [
+                                                                0.5,
+                                                                0.5,
+                                                                0.5
+                                                            ]
+                                              },
+                    "firstperson_righthand":  {
+                                                  "rotation":  [
+                                                                   0,
+                                                                   45,
+                                                                   0
+                                                               ],
+                                                  "scale":  [
+                                                                0.6,
+                                                                0.6,
+                                                                0.6
+                                                            ]
+                                              }
+                },
+    "overrides":  [
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  0
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_white_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  1
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_orange_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  2
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_magenta_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  3
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_light_blue_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  4
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_yellow_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  5
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_lime_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  6
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_pink_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  7
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_gray_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  8
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_light_gray_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  9
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_cyan_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  10
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_purple_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  11
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_blue_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  12
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_brown_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  13
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_green_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  14
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_red_1_off"
+                      },
+                      {
+                          "predicate":  {
+                                            "realistic_lighting:fixture_color":  15
+                                        },
+                          "model":  "realistic_lighting:block/wall_sconce_black_1_off"
+                      }
+                  ]
 }
